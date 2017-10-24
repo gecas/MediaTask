@@ -1,0 +1,41 @@
+{% if  app.session.flashbag.has('flash_message')  %}
+
+    {% for message in app.session.flashbag.get('flash_message') %}
+    <script>
+
+        swal({
+            title: "{{ message.title }}",
+            text: "{{ message.message }}",
+            type: "{{ message.level }}",
+            //timer: 2000,
+            showConfirmButton: true
+        }).catch(swal.noop);
+
+    </script>
+    {% endfor %}
+
+{% endif %}
+
+{% if  app.session.has('flash_message_overlay')  %}
+
+<script>
+
+    swal({
+        title: "{{ app.session.get('flash_message_overlay.title') }}",
+        text: "{{ app.session.get('flash_message_overlay.message') }}",
+        type: "{{ app.session.get('flash_message_overlay.level') }}",
+        confirmButtonText:'Okay'
+    });
+
+</script>
+{% endif %}
+
+{% if  app.session.has('flash_message_aside')  %}
+
+<script>
+    flashMessage("{{ app.session.get('flash_message_aside.message') }}");
+</script>
+
+{% endif %}
+
+

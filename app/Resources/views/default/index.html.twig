@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="card adverts-group-items-card">
+        <div class="card-header">
+            Adverts categories
+
+            <i class="fa fa-chevron-down pull-right adverts-categories-chevron" aria-hidden="true"></i>
+        </div>
+        <div class="card-body adverts-group-items-card-body">
+
+            <div class="adverts-group-items">
+                {% if groups is defined and groups|length > 0 %}
+                    {% for group in groups %}
+                    <div class="adverts-item">
+                        <div class="card">
+                            <div class="card-header">
+                                {{ group.getTitle }} <i class="{{ group.getIconClass }}" aria-hidden="true"></i>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% for category in group.getAdvertsCategories() %}
+                                <li class="list-group-item"><a href="/app_dev.php/category/{{ category.slug }}">{{  category.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <h3 class="text-center">Latest advertisements</h3>
+    <div class="row">
+        <div class="adverts-items">
+            {% if adverts is defined and adverts|length > 0 %}
+                {% for ad in adverts %}
+                <div class="adverts-item">
+                    {% if ad.getAdvertsPhotosFirst() %}
+                        <img src="{{ ad.getAdvertsPhotosFirst().getPhoto()  }}" alt="">
+                        {% else %}
+                            <img src="/images/default.png" alt="">
+                    {% endif %}
+                    <a data-advert-id="{{ ad.id }}" href="/app_dev.php/advertisement/{{ ad.getSlug }}">{{ ad.getTitle }}</a>
+                    <div class="advert-item-info">
+                        <b>{{ ad.getPrice }} €</b>
+                        <span>{{ ad.getCreatedAt|date("Y-m-d") }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h3 class="text-center">No results for current request</h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

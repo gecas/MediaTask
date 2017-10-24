@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="container">
+            <div class="advert-item-detail">
+                {% if advert is defined %}
+                <h3 class="text-center">{{ advert.title }}</h3>
+                {% if advert.getAdvertsPhotosFirst() %}
+                <a href="{{ advert.getAdvertsPhotosFirst().getPhoto()  }}" class="swipebox" title="{{ advert.title }}">
+                    <img class="advert-item-detail-main-image" src="{{ advert.getAdvertsPhotosFirst().getPhoto()  }}" alt="">
+                </a>
+                {% else %}
+                    <img src="/images/default.png" alt="">
+                {% endif %}
+                <div class="advert-item-detail-images-list">
+                    {% for key, image in advert.getAdvertsPhotos %}
+                        {% if image and key > 0 %}
+                            <a href="{{ image.getPhoto()  }}" class="swipebox" title="{{ advert.title }}">
+                                <img src="{{ image.getPhoto()  }}" alt="">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="advert-item-detail-info">
+                    <div class="advert-item-detail-info-first-block">
+                        <b>Price: </b>
+                        <span class="green-price">{{ advert.price }} €</span>
+                    </div>
+                    <div>
+                        <b>Date of posting: </b>
+                        <span>{{ advert.getCreatedAt|date("Y-m-d") }}</span>
+                    </div>
+                </div>
+                <h5 class="text-center">Description: </h5>
+                <div class="advert-item-detail-description">
+                    {{ advert.description }}
+                </div>
+                {% else %}
+                    <h3 class="text-center">No results for current request</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

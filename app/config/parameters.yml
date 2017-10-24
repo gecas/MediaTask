@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: localhost
+    database_port: 33060
+    database_name: mediapark
+    database_user: homestead
+    database_password: secret
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: 38addd4a42c3728b92626e3af0e8e77e61bafc2a

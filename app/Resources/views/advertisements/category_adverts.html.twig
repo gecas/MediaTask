@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h3 class="text-center">Category advertisements</h3>
+    <div class="row">
+        <div class="adverts-items">
+            {% if adverts is defined and adverts|length > 0 %}
+                {% for ad in adverts %}
+                    <div class="adverts-item">
+                        {% if ad.getAdvertsPhotosFirst() %}
+                            <img src="{{ ad.getAdvertsPhotosFirst().getPhoto()  }}" alt="">
+                        {% else %}
+                            <img src="/images/default.png" alt="">
+                        {% endif %}
+                        <a data-advert-id="{{ ad.id }} href="/app_dev.php/advertisement/{{ ad.getSlug }}">{{ ad.getTitle }}</a>
+                        <div class="advert-item-info">
+                            <b>{{ ad.getPrice }} €</b>
+                            <span>{{ ad.getCreatedAt|date("Y-m-d") }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h3 class="text-center">No results for current request</h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

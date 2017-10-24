@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('sweetalert/sweetalert.css') }}">
+    <link rel="stylesheet" href="{{ asset('swipebox/css/swipebox.min.css') }}">
+</head>
+<body>
+<header>
+    {% include 'partials/nav.html.twig' %}
+    {#<div class="header-search">#}
+        {#<form class="form-inline mt-2 mt-md-0">#}
+            {#<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">#}
+            {#<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
+        {#</form>#}
+    {#</div>#}
+</header>
+
+<main role="main" class="container">
+    {% block content %}{% endblock %}
+</main>
+
+{% block scripts %}{% endblock %}
+<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+<script src="{{ asset('scripts/app.js') }}"></script>
+<script src="{{ asset('sweetalert/sweetalert.js') }}"></script>
+<script src="{{ asset('swipebox/js/jquery.swipebox.min.js') }}"></script>
+<script>
+    $('.adverts-item a').on('click', function(e){
+        e.preventDefault();
+        var ad_id = $(this).data('advert-id');
+        var path = "{{ path('views_counter') }}";
+
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {
+                advert: ad_id
+            },
+            error: function() {
+                console.log('An error has occurred');
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    });
+</script>
+<script>
+    ( function( $ ) {
+        $( '.swipebox' ).swipebox();
+    } )( jQuery );
+</script>
+<script>
+    var socket = io(':6001');
+    socket.on('message', function (msg) {
+        msg = JSON.parse(msg);
+        var block = $('.adverts-items');
+
+        console.log(msg);
+
+        var item = $('<div/>').addClass('adverts-item').attr('style', 'filter: blur(13px)')
+            .append(
+                $('<img/>').attr('src', msg.photo_path+msg.photo_name)
+            )
+            .append(
+                $('<a/>').attr('href', msg.slug).text(msg.title)
+            )
+            .append(
+                $('<div/>').addClass('advert-item-info')
+                    .append(
+                        $('<b/>').text(msg.price + '€')
+                    )
+                    .append(
+                        $('<span/>').text(msg.created_at)
+                    )
+            );
+        item.prependTo(block);
+        setTimeout(function(){
+            item.attr('style', '');
+        }, 1000);
+
+    });
+</script>
+<script>
+    $(document).ready(function(){
+    });
+    $('.adverts-categories-chevron').on('click', function(){
+        $(this).parent().parent().find('.card-body').toggle(500);
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+    });
+</script>
+{% include 'flash.html.twig' %}
+</body>
+</html>
